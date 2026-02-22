@@ -261,12 +261,14 @@ class RecipeDetailFragment : Fragment() {
     private fun hideSystemUI(hide: Boolean) {
         val window = requireActivity().window
         val controller = WindowInsetsControllerCompat(window, binding.root)
-        WindowCompat.setDecorFitsSystemWindows(window, !hide)
+        
         if (hide) {
-            controller.hide(WindowInsetsCompat.Type.systemBars())
+            // Ocultamos SOLO la barra de estado (la franja de arriba)
+            controller.hide(WindowInsetsCompat.Type.statusBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
-            controller.show(WindowInsetsCompat.Type.systemBars())
+            // Mostramos la barra de estado
+            controller.show(WindowInsetsCompat.Type.statusBars())
         }
     }
 
