@@ -122,6 +122,12 @@ class RecipeDetailFragment : Fragment() {
                             binding.btnWatchVideo.setOnClickListener {
                                 videoUrl = recipe.videoUrl
                                 binding.btnWatchVideo.isVisible = false
+                                
+                                // Usamos post para asegurar que el scroll ocurra después de procesar el clic
+                                binding.detailScrollView.post {
+                                    binding.detailScrollView.fullScroll(View.FOCUS_UP)
+                                }
+                                
                                 detectVideoOrientation(recipe.videoUrl!!)
                             }
                         } else {
@@ -165,6 +171,11 @@ class RecipeDetailFragment : Fragment() {
 
         binding.videoContainer.isVisible = true
         binding.ivRecipeDetail.isVisible = false
+        
+        // Aseguramos que suba al inicio una vez el video se muestra
+        binding.detailScrollView.post {
+            binding.detailScrollView.fullScroll(View.FOCUS_UP)
+        }
 
         val dataSourceFactory = DefaultHttpDataSource.Factory()
             .setDefaultRequestProperties(mapOf("Authorization" to "Bearer $token"))
