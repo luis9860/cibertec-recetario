@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño para la actividad de Video en Pantalla Completa.
+    Utiliza un fondo negro para resaltar el video y un ConstraintLayout para centrar el reproductor.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
+    <!--
+        PlayerView: Componente de la librería Media3 (ExoPlayer) para mostrar el video.
+        - use_controller: Habilita los controles de reproducción (play, pause, barra de tiempo).
+        - resize_mode: 'fit' ajusta el video a la pantalla manteniendo su proporción.
+        - show_buffering: Muestra un círculo de carga cuando el video se está descargando.
+    -->
     <androidx.media3.ui.PlayerView
         android:id="@+id/fullScreenPlayerView"
         android:layout_width="match_parent"

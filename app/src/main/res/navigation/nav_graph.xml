@@ -1,59 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    NavGraph: Mapa de Navegación de la Aplicación.
+    Define todas las pantallas (destinos) y las rutas (acciones) que el usuario puede seguir.
+    Usa el Navigation Component de Jetpack para gestionar el intercambio de fragmentos.
+-->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/nav_home">
 
+    <!-- Pantalla de Inicio de Sesión -->
     <fragment
         android:id="@+id/loginFragment"
         android:name="pe.edu.cibertec.recetario.ui.auth.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
+        <!-- Acción para ir al Home tras un login exitoso, limpiando la pila para no volver atrás -->
         <action
             android:id="@+id/action_loginFragment_to_nav_home"
             app:destination="@id/nav_home"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+        <!-- Acción para ir a la pantalla de registro -->
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
     </fragment>
 
+    <!-- Pantalla de Registro de nuevos usuarios -->
     <fragment
         android:id="@+id/registerFragment"
         android:name="pe.edu.cibertec.recetario.ui.auth.RegisterFragment"
         android:label="Registro"
         tools:layout="@layout/fragment_register" />
 
-    <!-- Fragment para Home (Recetas Públicas) -->
+    <!--
+        Fragment para Home (Recetas Públicas).
+        Usa el mismo RecipeListFragment pero configurado para mostrar contenido global.
+    -->
     <fragment
         android:id="@+id/nav_home"
         android:name="pe.edu.cibertec.recetario.ui.recipes.list.RecipeListFragment"
         android:label="Inicio"
         tools:layout="@layout/fragment_recipe_list">
+        <!-- Argumento para indicar que NO es modo privado -->
         <argument
             android:name="is_private"
             android:defaultValue="false"
             app:argType="boolean" />
+        <!-- Acción para ver el detalle de una receta seleccionada -->
         <action
             android:id="@+id/action_nav_home_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment" />
     </fragment>
 
-    <!-- Fragment para Agregar Receta -->
+    <!-- Fragment para la pantalla de creación de nuevas recetas -->
     <fragment
         android:id="@+id/nav_add"
         android:name="pe.edu.cibertec.recetario.ui.recipes.add.AddRecipeFragment"
         android:label="Nueva Receta"
         tools:layout="@layout/fragment_add_recipe" />
 
-    <!-- Fragment para Perfil (Recetas Privadas) -->
+    <!--
+        Fragment para Perfil (Recetas Privadas).
+        Reutiliza el RecipeListFragment configurando el argumento is_private como true.
+    -->
     <fragment
         android:id="@+id/nav_profile"
         android:name="pe.edu.cibertec.recetario.ui.recipes.list.RecipeListFragment"
         android:label="Tú"
         tools:layout="@layout/fragment_recipe_list">
+        <!-- Argumento que activa el filtrado de recetas propias del usuario -->
         <argument
             android:name="is_private"
             android:defaultValue="true"
@@ -63,21 +81,26 @@
             app:destination="@id/recipeDetailFragment" />
     </fragment>
 
-    <!-- Fragment para Detalle de Receta -->
+    <!--
+        Fragment para Visualizar el Detalle de una Receta.
+        Requiere obligatoriamente el ID de la receta para cargar los datos.
+    -->
     <fragment
         android:id="@+id/recipeDetailFragment"
         android:name="pe.edu.cibertec.recetario.ui.recipes.detail.RecipeDetailFragment"
         android:label="Detalle de Receta"
         tools:layout="@layout/fragment_recipe_detail">
+        <!-- Parámetro necesario para identificar qué receta mostrar -->
         <argument
             android:name="recipe_id"
             app:argType="long" />
+        <!-- Acción para navegar a la pantalla de edición -->
         <action
             android:id="@+id/action_recipeDetailFragment_to_editRecipeFragment"
             app:destination="@id/editRecipeFragment" />
     </fragment>
 
-    <!-- Fragment para Editar Receta -->
+    <!-- Fragment para Editar los datos de una receta existente -->
     <fragment
         android:id="@+id/editRecipeFragment"
         android:name="pe.edu.cibertec.recetario.ui.recipes.edit.EditRecipeFragment"

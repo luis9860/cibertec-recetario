@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño de la pantalla de Detalle de Receta.
+    Utiliza un ScrollView para que el usuario pueda leer toda la información de la receta,
+    ya que la descripción puede ser extensa.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -16,6 +21,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Imagen principal de la receta -->
         <ImageView
             android:id="@+id/ivRecipeDetail"
             android:layout_width="match_parent"
@@ -23,7 +29,10 @@
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_menu_gallery" />
 
-        <!-- Contenedor de Video con Media3 PlayerView -->
+        <!--
+            Contenedor de Video: Solo se muestra si el usuario pulsa "Reproducir Video".
+            Contiene el PlayerView de la librería Media3.
+        -->
         <FrameLayout
             android:id="@+id/videoContainer"
             android:layout_width="match_parent"
@@ -39,6 +48,7 @@
                 app:resize_mode="fit"
                 app:show_buffering="always" />
 
+            <!-- Cargador específico para la descarga inicial del video -->
             <ProgressBar
                 android:id="@+id/videoProgressBar"
                 android:layout_width="wrap_content"
@@ -47,6 +57,7 @@
                 android:visibility="gone" />
         </FrameLayout>
 
+        <!-- Título de la receta -->
         <TextView
             android:id="@+id/tvDetailTitle"
             android:layout_width="match_parent"
@@ -55,6 +66,7 @@
             android:textAppearance="?attr/textAppearanceHeadlineSmall"
             android:textColor="?attr/colorOnSurface" />
 
+        <!-- Correo del autor de la receta -->
         <TextView
             android:id="@+id/tvDetailAuthor"
             android:layout_width="match_parent"
@@ -63,6 +75,7 @@
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
+        <!-- Descripción completa / Procedimiento de la receta -->
         <TextView
             android:id="@+id/tvDetailDescription"
             android:layout_width="match_parent"
@@ -71,6 +84,10 @@
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="?attr/colorOnSurface" />
 
+        <!--
+            Panel de acciones (Editar/Eliminar):
+            Solo visible si el usuario logueado es el dueño de la receta.
+        -->
         <LinearLayout
             android:id="@+id/layoutActions"
             android:layout_width="match_parent"
@@ -98,6 +115,7 @@
 
         </LinearLayout>
 
+        <!-- Botón para iniciar el reproductor de video -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnWatchVideo"
             style="?attr/materialButtonOutlinedStyle"
@@ -107,6 +125,7 @@
             android:text="Reproducir Video"
             android:visibility="gone" />
 
+        <!-- Cargador principal mientras se obtienen los datos de la receta -->
         <ProgressBar
             android:id="@+id/detailProgressBar"
             android:layout_width="wrap_content"

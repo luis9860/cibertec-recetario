@@ -21,11 +21,17 @@ import pe.edu.cibertec.recetario.databinding.FragmentLoginBinding
 import pe.edu.cibertec.recetario.ui.common.ValidationUtils
 import pe.edu.cibertec.recetario.ui.common.ViewModelFactory
 
+/**
+ * Fragmento de Inicio de Sesión (Login).
+ * Permite a los usuarios existentes acceder a su cuenta validando sus credenciales.
+ */
 class LoginFragment : Fragment() {
 
+    // ViewBinding para acceder a los campos del layout fragment_login.xml
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    // Inicialización del ViewModel encargado de procesar la autenticación
     private val viewModel: LoginViewModel by viewModels {
         val container = (requireActivity().application as RecetarioApp).container
         ViewModelFactory(container)
@@ -41,11 +47,15 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupListeners()
-        observeState()
+        setupListeners() // Configura los clics en botones
+        observeState()   // Escucha los cambios de estado (carga, éxito, error)
     }
 
+    /**
+     * Configura los botones de la interfaz.
+     */
     private fun setupListeners() {
+        // Botón para iniciar sesión
         binding.btnLogin.setOnClickListener {
             if (validateFields()) {
                 val email = binding.etEmail.text.toString().trim()
@@ -54,11 +64,15 @@ class LoginFragment : Fragment() {
             }
         }
 
+        // Enlace para ir a la pantalla de Registro si no tiene cuenta
         binding.btnGoRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
 
+    /**
+     * Valida que el formato del correo y la contraseña sean correctos antes de enviar al servidor.
+     */
     private fun validateFields(): Boolean {
         val email = binding.etEmail.text.toString().trim()
         val password = binding.etPassword.text.toString().trim()
@@ -69,21 +83,27 @@ class LoginFragment : Fragment() {
         return isEmailValid && isPasswordValid
     }
 
+    /**
+     * Reacciona a los cambios en el estado de autenticación.
+     */
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    // Muestra/oculta el indicador de carga
                     binding.progressBar.isVisible = state.isLoading
                     binding.btnLogin.isEnabled = !state.isLoading
 
+                    // Si el login es exitoso, reinicia la app para aplicar el nuevo tema y mostrar el perfil
                     if (state.isSuccess) {
-                        // LA CORRECCIÓN: Reiniciar la MainActivity para aplicar el nuevo tema
                         val intent = Intent(requireContext(), MainActivity::class.java)
+                        // Limpia la pila de actividades para evitar que el usuario regrese al login con el botón atrás
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
-                        requireActivity().finish() // Finalizar la actividad actual
+                        requireActivity().finish()
                     }
 
+                    // Muestra errores si las credenciales son incorrectas
                     state.errorMessage?.let {
                         Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                     }
@@ -94,6 +114,6 @@ class LoginFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null // Evita fugas de memoria al destruir el fragmento
     }
 }

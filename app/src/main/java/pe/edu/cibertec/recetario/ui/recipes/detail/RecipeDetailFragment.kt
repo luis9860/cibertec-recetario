@@ -40,17 +40,23 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.AspectRatioFrameLayout
 
+/**
+ * Fragmento encargado de mostrar el detalle de una receta específica,
+ * incluyendo su imagen, descripción y reproducción de video.
+ */
 class RecipeDetailFragment : Fragment() {
 
+    // Variables para el binding (acceso a las vistas) y manejo de estado
     private var _binding: FragmentRecipeDetailBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var sessionManager: SessionManager
-    private var player: ExoPlayer? = null
-    private var videoUrl: String? = null
-    private var isVerticalVideo = false
-    private var isManualFullscreen = false
+    private var player: ExoPlayer? = null // Reproductor de video ExoPlayer
+    private var videoUrl: String? = null // URL del video de la receta
+    private var isVerticalVideo = false // Indica si el video es vertical (formato Shorts/TikTok)
+    private var isManualFullscreen = false // Controla si el usuario activó la pantalla completa
 
+    // Infla el diseño XML del fragmento e inicializa el gestor de sesión
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,11 +66,13 @@ class RecipeDetailFragment : Fragment() {
         return binding.root
     }
 
+    // Inicialización del ViewModel mediante una factoría personalizada
     private val viewModel: RecipeDetailViewModel by viewModels {
         val container = (requireActivity().application as RecetarioApp).container
         ViewModelFactory(container)
     }
 
+    // Una vez creada la vista, se obtiene el ID de la receta y se cargan los datos
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -76,23 +84,30 @@ class RecipeDetailFragment : Fragment() {
         observeState()
     }
 
+    /**
+     * Observa los cambios en el estado de la receta desde el ViewModel
+     * y actualiza la interfaz de usuario dinámicamente.
+     */
     private fun observeState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
+                    // Muestra/Oculta el indicador de carga principal
                     binding.detailProgressBar.isVisible = state.isLoading
 
                     state.recipe?.let { recipe ->
+                        // Asigna los textos de la receta a las vistas correspondientes
                         binding.tvDetailTitle.text = recipe.title
                         binding.tvDetailDescription.text = recipe.description
                         binding.tvDetailAuthor.text = "Autor: ${recipe.authorEmail ?: "Anónimo"}"
 
+                        // Carga la imagen de la receta usando la librería Glide
                         Glide.with(this@RecipeDetailFragment)
                             .load(recipe.imageUrl)
                             .placeholder(android.R.drawable.ic_menu_gallery)
                             .into(binding.ivRecipeDetail)
 
-                        // Botones editar/eliminar solo si es del usuario
+                        // Configura la visibilidad de los botones Editar/Eliminar si el usuario es el dueño
                         binding.layoutActions.isVisible = recipe.isMine
                         if (recipe.isMine) {
                             binding.btnEdit.setOnClickListener {
@@ -116,14 +131,14 @@ class RecipeDetailFragment : Fragment() {
                             }
                         }
 
-                        // Solo mostramos el botón, no iniciamos el video automáticamente
+                        // Configura el botón para ver el video si existe una URL válida
                         if (!recipe.videoUrl.isNullOrBlank()) {
                             binding.btnWatchVideo.isVisible = true
                             binding.btnWatchVideo.setOnClickListener {
                                 videoUrl = recipe.videoUrl
                                 binding.btnWatchVideo.isVisible = false
                                 
-                                // Usamos post para asegurar que el scroll ocurra después de procesar el clic
+                                // Hace scroll automático hacia arriba para que el video sea visible
                                 binding.detailScrollView.post {
                                     binding.detailScrollView.fullScroll(View.FOCUS_UP)
                                 }
@@ -135,6 +150,7 @@ class RecipeDetailFragment : Fragment() {
                         }
                     }
 
+                    // Si la receta fue eliminada con éxito, muestra un mensaje y regresa a la pantalla anterior
                     if (state.isDeleted) {
                         Toast.makeText(requireContext(), "Receta eliminada", Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
@@ -144,6 +160,10 @@ class RecipeDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Analiza las dimensiones y rotación del video para determinar si es vertical u horizontal.
+     * Esto ayuda a decidir cómo aplicar el modo de pantalla completa.
+     */
     private fun detectVideoOrientation(url: String) {
         viewLifecycleOwner.lifecycleScope.launch {
             binding.videoProgressBar.isVisible = true
@@ -155,6 +175,7 @@ class RecipeDetailFragment : Fragment() {
                     val height = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT)?.toInt() ?: 0
                     val rotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)?.toInt() ?: 0
                     retriever.release()
+                    // Lógica para detectar orientación considerando la rotación del video
                     if (rotation == 90 || rotation == 270) width > height else height > width
                 } catch (e: Exception) {
                     false
@@ -165,6 +186,9 @@ class RecipeDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * Inicializa el reproductor ExoPlayer y configura la vista de video.
+     */
     @OptIn(UnstableApi::class)
     private fun setupPlayer(url: String) {
         val token = sessionManager.getToken() ?: ""
@@ -172,11 +196,12 @@ class RecipeDetailFragment : Fragment() {
         binding.videoContainer.isVisible = true
         binding.ivRecipeDetail.isVisible = false
         
-        // Aseguramos que suba al inicio una vez el video se muestra
+        // Refuerza el scroll hacia arriba para mostrar el reproductor
         binding.detailScrollView.post {
             binding.detailScrollView.fullScroll(View.FOCUS_UP)
         }
 
+        // Configura la fuente de datos con el token de autorización para videos protegidos
         val dataSourceFactory = DefaultHttpDataSource.Factory()
             .setDefaultRequestProperties(mapOf("Authorization" to "Bearer $token"))
 
@@ -188,15 +213,17 @@ class RecipeDetailFragment : Fragment() {
             player = this@RecipeDetailFragment.player
             resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
 
+            // Maneja el botón de pantalla completa nativo del reproductor
             setFullscreenButtonClickListener {
                 if (isVerticalVideo) {
-                    toggleVerticalFullscreen()
+                    toggleVerticalFullscreen() // Pantalla completa interna para videos verticales
                 } else {
-                    openFullScreenActivity()
+                    openFullScreenActivity() // Nueva actividad para videos horizontales
                 }
             }
         }
 
+        // Prepara y comienza la reproducción del video
         val mediaItem = MediaItem.fromUri(url)
         player?.setMediaItem(mediaItem)
         player?.prepare()
@@ -204,17 +231,23 @@ class RecipeDetailFragment : Fragment() {
         binding.videoProgressBar.isVisible = false
     }
 
+    // Alterna el estado de pantalla completa para videos verticales
     private fun toggleVerticalFullscreen() {
         isManualFullscreen = !isManualFullscreen
         applyVerticalFullscreenUI(isManualFullscreen)
     }
 
+    /**
+     * Aplica los cambios visuales necesarios para el modo pantalla completa:
+     * Oculta barras de navegación de la app, toolbar, textos y ajusta el tamaño del reproductor.
+     */
     private fun applyVerticalFullscreenUI(full: Boolean) {
         val activity = requireActivity() as AppCompatActivity
         val bottomNav = activity.findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val appBar = activity.findViewById<View>(R.id.appBarLayout)
 
         if (full) {
+            // OCULTAR elementos para pantalla completa
             bottomNav?.isVisible = false
             appBar?.isVisible = false
             hideSystemUI(true)
@@ -230,10 +263,11 @@ class RecipeDetailFragment : Fragment() {
             binding.layoutActions.isVisible = false
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
             
-            // Opcional: Desactivar scroll
+            // Desactiva el scroll para que el video no se mueva al tocarlo
             binding.detailScrollView.isVerticalScrollBarEnabled = false
             binding.detailScrollView.setOnTouchListener { _, _ -> true }
         } else {
+            // MOSTRAR elementos (volver al estado normal)
             bottomNav?.isVisible = true
             appBar?.isVisible = true
             hideSystemUI(false)
@@ -249,29 +283,34 @@ class RecipeDetailFragment : Fragment() {
             binding.tvDetailTitle.isVisible = true
             binding.tvDetailDescription.isVisible = true
             binding.tvDetailAuthor.isVisible = true
+            // Restaura los botones solo si el usuario es el dueño de la receta
             binding.layoutActions.isVisible = viewModel.uiState.value.recipe?.isMine == true
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             
-            // Reactivar scroll
+            // Reactiva el scroll
             binding.detailScrollView.isVerticalScrollBarEnabled = true
             binding.detailScrollView.setOnTouchListener(null)
         }
     }
 
+    /**
+     * Gestiona la visibilidad de la barra de estado del sistema (hora, batería, etc.)
+     */
     private fun hideSystemUI(hide: Boolean) {
         val window = requireActivity().window
         val controller = WindowInsetsControllerCompat(window, binding.root)
         
         if (hide) {
-            // Ocultamos SOLO la barra de estado (la franja de arriba)
+            // Oculta la franja superior del sistema
             controller.hide(WindowInsetsCompat.Type.statusBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         } else {
-            // Mostramos la barra de estado
+            // Muestra la franja superior del sistema
             controller.show(WindowInsetsCompat.Type.statusBars())
         }
     }
 
+    // Lanza una actividad dedicada para ver el video horizontal en pantalla completa
     private fun openFullScreenActivity() {
         val intent = Intent(requireContext(), FullScreenVideoActivity::class.java).apply {
             putExtra("video_url", videoUrl)
@@ -280,14 +319,19 @@ class RecipeDetailFragment : Fragment() {
         startActivity(intent)
     }
 
+    // Pausa el video si el fragmento deja de ser visible
     override fun onPause() {
         super.onPause()
         player?.pause()
     }
 
+    /**
+     * Libera los recursos del reproductor al destruir la vista para evitar consumos
+     * innecesarios de memoria y batería.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
-        applyVerticalFullscreenUI(false)
+        applyVerticalFullscreenUI(false) // Asegura que las barras vuelvan a aparecer
         player?.release()
         player = null
         _binding = null

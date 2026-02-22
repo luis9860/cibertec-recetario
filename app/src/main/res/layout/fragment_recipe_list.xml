@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño de la pantalla de Listado de Recetas.
+    Muestra una barra de búsqueda en la parte superior y una lista deslizable (RecyclerView) debajo.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,6 +10,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.recipes.list.RecipeListFragment">
 
+    <!--
+        TextInputLayout con buscador:
+        Permite al usuario filtrar recetas por nombre o descripción.
+        Incluye un icono de lupa (ic_search) para mejorar la guía visual.
+    -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilSearch"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -24,6 +33,11 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!--
+        RecyclerView: El componente más importante de esta pantalla.
+        Gestiona la visualización eficiente de la lista de recetas.
+        Usa un LinearLayoutManager para mostrar los elementos uno debajo de otro.
+    -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRecipes"
         android:layout_width="0dp"
@@ -35,6 +49,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+    <!--
+        ProgressBar central:
+        Se hace visible únicamente mientras la aplicación está descargando
+        las recetas desde el servidor PHP.
+    -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

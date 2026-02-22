@@ -13,34 +13,48 @@ import pe.edu.cibertec.recetario.domain.model.Recipe
 import pe.edu.cibertec.recetario.domain.usecase.CreateRecipeUseCase
 import pe.edu.cibertec.recetario.domain.usecase.UploadFileUseCase
 
+/**
+ * Estado de la interfaz de usuario para la pantalla de Añadir Receta.
+ * Controla el progreso de carga de archivos y los mensajes informativos.
+ */
 data class AddRecipeUiState(
-    val isLoading: Boolean = false,
-    val isSuccess: Boolean = false,
-    val errorMessage: String? = null,
-    val uploadStatus: String? = null,
-    val imageProgress: Int = 0,
-    val videoProgress: Int = 0,
-    val selectedImageUri: Uri? = null,
-    val selectedVideoUri: Uri? = null,
-    val videoInfo: String? = null
+    val isLoading: Boolean = false,         // Indica si hay alguna operación en curso
+    val isSuccess: Boolean = false,         // Éxito al guardar la receta
+    val errorMessage: String? = null,        // Mensaje de error para el usuario
+    val uploadStatus: String? = null,        // Texto descriptivo del progreso actual (Ej: "Subiendo imagen...")
+    val imageProgress: Int = 0,             // Porcentaje de subida de la imagen (0-100)
+    val videoProgress: Int = 0,             // Porcentaje de subida del video (0-100)
+    val selectedImageUri: Uri? = null,      // URI local de la imagen seleccionada
+    val selectedVideoUri: Uri? = null,      // URI local del video seleccionado
+    val videoInfo: String? = null           // Nombre y tamaño del video seleccionado
 )
 
+/**
+ * ViewModel para la creación de nuevas recetas.
+ * Coordina la subida de archivos multimedia y el registro final de la receta en el servidor.
+ */
 class AddRecipeViewModel(
-    private val createRecipeUseCase: CreateRecipeUseCase,
-    private val uploadFileUseCase: UploadFileUseCase
+    private val createRecipeUseCase: CreateRecipeUseCase, // Caso de uso para guardar la receta
+    private val uploadFileUseCase: UploadFileUseCase     // Caso de uso para subir archivos al servidor
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddRecipeUiState())
     val uiState: StateFlow<AddRecipeUiState> = _uiState.asStateFlow()
 
+    // Actualiza el estado cuando el usuario elige una imagen
     fun onImageSelected(uri: Uri) {
         _uiState.update { it.copy(selectedImageUri = uri) }
     }
 
+    // Actualiza el estado cuando el usuario elige un video
     fun onVideoSelected(uri: Uri, info: String) {
         _uiState.update { it.copy(selectedVideoUri = uri, videoInfo = info) }
     }
 
+    /**
+     * Proceso principal de creación de receta.
+     * Sigue el flujo: Subir Imagen -> Subir Video -> Guardar Receta.
+     */
     fun createRecipe(title: String, description: String, visibility: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null, uploadStatus = null) }
@@ -48,37 +62,39 @@ class AddRecipeViewModel(
             var finalImageUrl: String? = null
             var finalVideoUrl: String? = null
 
-            // 1. Subir Imagen si existe
+            // 1. Subir Imagen si existe una seleccionada
             _uiState.value.selectedImageUri?.let { uri ->
                 _uiState.update { it.copy(uploadStatus = "Subiendo imagen...") }
                 val result = uploadFileUseCase(uri, "image/*") { progress ->
+                    // Actualizamos la barra de progreso de la imagen
                     _uiState.update { it.copy(imageProgress = progress) }
                 }
                 when (result) {
-                    is AppResult.Success -> finalImageUrl = result.data
+                    is AppResult.Success -> finalImageUrl = result.data // Guardamos la URL recibida
                     is AppResult.Error -> {
                         _uiState.update { it.copy(isLoading = false, errorMessage = "Error al subir imagen: ${result.error}") }
-                        return@launch
+                        return@launch // Detenemos el proceso si falla la subida
                     }
                 }
             }
 
-            // 2. Subir Video si existe
+            // 2. Subir Video si existe uno seleccionado
             _uiState.value.selectedVideoUri?.let { uri ->
                 _uiState.update { it.copy(uploadStatus = "Subiendo video...") }
                 val result = uploadFileUseCase(uri, "video/mp4") { progress ->
+                    // Actualizamos la barra de progreso del video
                     _uiState.update { it.copy(videoProgress = progress) }
                 }
                 when (result) {
-                    is AppResult.Success -> finalVideoUrl = result.data
+                    is AppResult.Success -> finalVideoUrl = result.data // Guardamos la URL recibida
                     is AppResult.Error -> {
                         _uiState.update { it.copy(isLoading = false, errorMessage = "Error al subir video: ${result.error}") }
-                        return@launch
+                        return@launch // Detenemos el proceso si falla la subida
                     }
                 }
             }
 
-            // 3. Crear Receta
+            // 3. Crear Registro de la Receta con las URLs obtenidas
             _uiState.update { it.copy(uploadStatus = "Finalizando receta...") }
             val recipe = Recipe(
                 id = 0,
@@ -93,8 +109,10 @@ class AddRecipeViewModel(
                 isMine = true
             )
 
+            // Enviamos los datos finales al servidor PHP
             when (val result = createRecipeUseCase(recipe)) {
                 is AppResult.Success -> {
+                    // Todo correcto: receta creada
                     _uiState.update { it.copy(isLoading = false, isSuccess = true) }
                 }
                 is AppResult.Error -> {

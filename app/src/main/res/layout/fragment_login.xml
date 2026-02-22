@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño de la pantalla de Inicio de Sesión (Login).
+    Utiliza un ConstraintLayout como raíz para posicionar los elementos de forma flexible.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,6 +13,7 @@
     android:padding="24dp"
     tools:context=".ui.auth.LoginFragment">
 
+    <!-- Tarjeta central que contiene el formulario de acceso -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,6 +30,7 @@
             android:layout_height="wrap_content"
             android:padding="30dp">
 
+            <!-- Título de bienvenida -->
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="0dp"
@@ -37,6 +43,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Subtítulo motivador -->
             <TextView
                 android:id="@+id/txtSubtitle"
                 android:layout_width="0dp"
@@ -50,6 +57,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Campo de entrada para el correo electrónico con icono -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutEmail"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -69,6 +77,7 @@
                     android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Campo de entrada para la contraseña con opción de mostrar/ocultar -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutPassword"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -89,6 +98,7 @@
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Botón para procesar el inicio de sesión -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogin"
                 android:layout_width="0dp"
@@ -100,6 +110,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Enlace para usuarios que aún no tienen cuenta -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGoRegister"
                 style="@style/Widget.App.Button.TextButton"
@@ -111,6 +122,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Indicador de carga circular -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"

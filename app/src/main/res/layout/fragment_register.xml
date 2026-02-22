@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño de la pantalla de Registro de Usuario.
+    Utiliza un ConstraintLayout como base para organizar los elementos de forma flexible y centrada.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,6 +13,7 @@
     android:padding="24dp"
     tools:context=".ui.auth.RegisterFragment">
 
+    <!-- Tarjeta contenedora que agrupa el formulario de registro con elevación y bordes redondeados -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,6 +30,7 @@
             android:layout_height="wrap_content"
             android:padding="30dp">
 
+            <!-- Título de la pantalla de registro -->
             <TextView
                 android:id="@+id/txtTitle"
                 android:layout_width="0dp"
@@ -37,6 +43,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Campo de entrada para el correo electrónico con validación visual -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutEmail"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -56,6 +63,7 @@
                     android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Campo de entrada para la contraseña con botón para mostrar/ocultar texto -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutPassword"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -76,6 +84,7 @@
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Campo para confirmar la contraseña y evitar errores de escritura -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutPassword2"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -96,6 +105,7 @@
                     android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Botón principal para ejecutar el registro -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRegister"
                 android:layout_width="0dp"
@@ -107,6 +117,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Botón de texto para regresar a la pantalla de Inicio de Sesión -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGoLogin"
                 style="@style/Widget.App.Button.TextButton"
@@ -118,6 +129,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
+            <!-- Barra de progreso que se muestra durante la comunicación con el servidor -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"

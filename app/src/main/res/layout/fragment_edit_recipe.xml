@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño para la pantalla de Edición de Receta.
+    Similar al de creación, utiliza un ScrollView para manejar formularios largos
+    y asegurar que el usuario pueda desplazarse por todos los campos.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +14,7 @@
     tools:context=".ui.recipes.edit.EditRecipeFragment"
     tools:theme="@style/Theme.Recetario">
 
+    <!-- Tarjeta para dar un aspecto moderno y agrupado al formulario de edición -->
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +30,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+            <!-- Título identificador de la pantalla -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,6 +40,7 @@
                 android:textColor="?attr/colorPrimary"
                 android:layout_marginBottom="24dp"/>
 
+            <!-- Campo de entrada para modificar el Título -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutTitle"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -46,6 +54,7 @@
                     android:hint="Título"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Campo de entrada para modificar la Descripción -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layoutDescription"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -62,6 +71,7 @@
                     android:gravity="top"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Instrucción para el manejo opcional de archivos multimedia -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,6 +79,7 @@
                 android:text="Multimedia (opcional — deja vacío para conservar)"
                 android:textAppearance="?attr/textAppearanceTitleMedium"/>
 
+            <!-- Botones para seleccionar nuevos archivos si se desea reemplazarlos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,6 +106,7 @@
                     app:icon="@android:drawable/ic_media_play" />
             </LinearLayout>
 
+            <!-- Vista previa de la nueva imagen seleccionada -->
             <ImageView
                 android:id="@+id/ivPreview"
                 android:layout_width="match_parent"
@@ -104,6 +116,7 @@
                 android:visibility="gone"
                 android:background="?attr/colorSecondaryContainer"/>
 
+            <!-- Información sobre el nuevo video seleccionado -->
             <TextView
                 android:id="@+id/tvVideoInfo"
                 android:layout_width="match_parent"
@@ -120,6 +133,7 @@
                 android:text="Visibilidad"
                 android:textAppearance="?attr/textAppearanceTitleMedium"/>
 
+            <!-- Selector para cambiar entre receta pública o privada -->
             <RadioGroup
                 android:id="@+id/rgVisibility"
                 android:layout_width="match_parent"
@@ -142,6 +156,7 @@
                     android:text="Privado"/>
             </RadioGroup>
 
+            <!-- Indicadores de progreso para las subidas durante la edición -->
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/progressImage"
                 android:layout_width="match_parent"
@@ -166,6 +181,7 @@
                 android:textColor="?attr/colorPrimary"
                 android:visibility="gone"/>
 
+            <!-- Botón para confirmar y guardar los cambios -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
@@ -174,6 +190,7 @@
                 android:paddingVertical="12dp"
                 android:text="Guardar cambios"/>
 
+            <!-- Cargador circular de procesamiento -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"

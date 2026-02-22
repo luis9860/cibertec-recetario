@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Diseño para un elemento individual de la lista de recetas (item).
+    Utiliza MaterialCardView para darle un aspecto de tarjeta con bordes redondeados y elevación.
+-->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,11 +14,13 @@
     android:layout_marginVertical="8dp"
     tools:theme="@style/Theme.Recetario">
 
+    <!-- ConstraintLayout para posicionar los elementos internos de la tarjeta de forma eficiente -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Imagen miniatura de la receta -->
         <ImageView
             android:id="@+id/ivRecipe"
             android:layout_width="100dp"
@@ -26,6 +32,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Título de la receta -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
@@ -37,6 +44,7 @@
             app:layout_constraintTop_toTopOf="@+id/ivRecipe"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Breve descripción o resumen de la receta (limitado a 2 líneas) -->
         <TextView
             android:id="@+id/tvDescription"
             android:layout_width="0dp"
@@ -50,6 +58,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvTitle"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <!-- Icono indicador (badge) que aparece si la receta tiene video -->
         <ImageView
             android:id="@+id/ivVideoBadge"
             android:layout_width="24dp"
