@@ -51,11 +51,6 @@ class RecipeDetailFragment : Fragment() {
     private var isVerticalVideo = false
     private var isManualFullscreen = false
 
-    private val viewModel: RecipeDetailViewModel by viewModels {
-        val container = (requireActivity().application as RecetarioApp).container
-        ViewModelFactory(container)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,6 +58,11 @@ class RecipeDetailFragment : Fragment() {
         _binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
         sessionManager = SessionManager(requireContext())
         return binding.root
+    }
+
+    private val viewModel: RecipeDetailViewModel by viewModels {
+        val container = (requireActivity().application as RecetarioApp).container
+        ViewModelFactory(container)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -201,9 +201,11 @@ class RecipeDetailFragment : Fragment() {
     private fun applyVerticalFullscreenUI(full: Boolean) {
         val activity = requireActivity() as AppCompatActivity
         val bottomNav = activity.findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val appBar = activity.findViewById<View>(R.id.appBarLayout)
 
         if (full) {
             bottomNav?.isVisible = false
+            appBar?.isVisible = false
             hideSystemUI(true)
             binding.detailContentLayout.setPadding(0, 0, 0, 0)
 
@@ -215,8 +217,13 @@ class RecipeDetailFragment : Fragment() {
             binding.tvDetailDescription.isVisible = false
             binding.tvDetailAuthor.isVisible = false
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+            
+            // Opcional: Desactivar scroll
+            binding.detailScrollView.isVerticalScrollBarEnabled = false
+            binding.detailScrollView.setOnTouchListener { _, _ -> true }
         } else {
             bottomNav?.isVisible = true
+            appBar?.isVisible = true
             hideSystemUI(false)
 
             val density = resources.displayMetrics.density
@@ -231,6 +238,10 @@ class RecipeDetailFragment : Fragment() {
             binding.tvDetailDescription.isVisible = true
             binding.tvDetailAuthor.isVisible = true
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+            
+            // Reactivar scroll
+            binding.detailScrollView.isVerticalScrollBarEnabled = true
+            binding.detailScrollView.setOnTouchListener(null)
         }
     }
 
