@@ -227,6 +227,7 @@ class RecipeDetailFragment : Fragment() {
             binding.tvDetailTitle.isVisible = false
             binding.tvDetailDescription.isVisible = false
             binding.tvDetailAuthor.isVisible = false
+            binding.layoutActions.isVisible = false
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
             
             // Opcional: Desactivar scroll
@@ -248,6 +249,7 @@ class RecipeDetailFragment : Fragment() {
             binding.tvDetailTitle.isVisible = true
             binding.tvDetailDescription.isVisible = true
             binding.tvDetailAuthor.isVisible = true
+            binding.layoutActions.isVisible = viewModel.uiState.value.recipe?.isMine == true
             binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             
             // Reactivar scroll
