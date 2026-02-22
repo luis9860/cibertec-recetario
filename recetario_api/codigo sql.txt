@@ -1,0 +1,80 @@
+/* =====================================================
+   BASE DE DATOS
+===================================================== */
+CREATE DATABASE IF NOT EXISTS recetario_local
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE recetario_local;
+
+
+/* =====================================================
+   TABLA: USERS
+===================================================== */
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  email VARCHAR(190) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at BIGINT NOT NULL, -- Unix time en segundos
+
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_users_email (email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+/* =====================================================
+   TABLA: AUTH_TOKENS
+===================================================== */
+CREATE TABLE IF NOT EXISTS auth_tokens (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+  token_hash CHAR(64) NOT NULL, -- SHA256
+  created_at BIGINT NOT NULL,
+  expires_at BIGINT NOT NULL,
+
+  PRIMARY KEY (id),
+
+  UNIQUE KEY uq_auth_tokens_token_hash (token_hash),
+  KEY idx_auth_tokens_user_id (user_id),
+  KEY idx_auth_tokens_expires (expires_at),
+
+  CONSTRAINT fk_auth_tokens_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+/* =====================================================
+   TABLA: RECIPES
+===================================================== */
+CREATE TABLE IF NOT EXISTS recipes (
+  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id BIGINT UNSIGNED NOT NULL,
+
+  title VARCHAR(200) NOT NULL,
+  description TEXT NULL,
+
+  visibility ENUM('private','public') NOT NULL DEFAULT 'private',
+
+  created_at BIGINT NOT NULL, -- Unix time segundos
+
+  url_imagen VARCHAR(500) NULL,
+  url_video VARCHAR(500) NULL,
+
+  PRIMARY KEY (id),
+
+  -- Para listar mis recetas
+  KEY idx_recipes_user (user_id),
+  KEY idx_recipes_user_id (user_id, id),
+
+  -- Para feed público
+  KEY idx_recipes_public (visibility, id),
+
+  CONSTRAINT fk_recipes_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

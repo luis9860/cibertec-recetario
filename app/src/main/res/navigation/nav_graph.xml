@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="pe.edu.cibertec.recetario.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_nav_home"
+            app:destination="@id/nav_home"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="pe.edu.cibertec.recetario.ui.auth.RegisterFragment"
+        android:label="Registro"
+        tools:layout="@layout/fragment_register" />
+
+    <!-- Fragment para Home (Recetas Públicas) -->
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="pe.edu.cibertec.recetario.ui.recipes.list.RecipeListFragment"
+        android:label="Inicio"
+        tools:layout="@layout/fragment_recipe_list">
+        <argument
+            android:name="is_private"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_nav_home_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+
+    <!-- Fragment para Agregar Receta -->
+    <fragment
+        android:id="@+id/nav_add"
+        android:name="pe.edu.cibertec.recetario.ui.recipes.add.AddRecipeFragment"
+        android:label="Nueva Receta"
+        tools:layout="@layout/fragment_add_recipe" />
+
+    <!-- Fragment para Perfil (Recetas Privadas) -->
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="pe.edu.cibertec.recetario.ui.recipes.list.RecipeListFragment"
+        android:label="Tú"
+        tools:layout="@layout/fragment_recipe_list">
+        <argument
+            android:name="is_private"
+            android:defaultValue="true"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/action_nav_profile_to_recipeDetailFragment"
+            app:destination="@id/recipeDetailFragment" />
+    </fragment>
+
+    <!-- Fragment para Detalle de Receta -->
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="pe.edu.cibertec.recetario.ui.recipes.detail.RecipeDetailFragment"
+        android:label="Detalle de Receta"
+        tools:layout="@layout/fragment_recipe_detail">
+        <argument
+            android:name="recipe_id"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_editRecipeFragment"
+            app:destination="@id/editRecipeFragment" />
+    </fragment>
+
+    <!-- Fragment para Editar Receta -->
+    <fragment
+        android:id="@+id/editRecipeFragment"
+        android:name="pe.edu.cibertec.recetario.ui.recipes.edit.EditRecipeFragment"
+        android:label="Editar Receta"
+        tools:layout="@layout/fragment_edit_recipe" />
+
+</navigation>

@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">recetario</string>
+    <string name="login_title">🍷 Bienvenido</string>
+    <string name="login_subtitle">Accede a tu mundo de recetas deliciosas</string>
+    <string name="login_hint_email">📧 Correo electrónico</string>
+    <string name="login_hint_password">🔒 Contraseña</string>
+    <string name="login_button">🍽️ Entrar</string>
+    <string name="login_go_register">🍰 No tengo cuenta (Registrarme)</string>
+
+    <string name="register_title">🍽️ Crear cuenta</string>
+    <string name="register_hint_email">📧 Email</string>
+    <string name="register_hint_password">🔒 Password (mín. 8)</string>
+    <string name="register_hint_confirm_password">🔁 Repetir password</string>
+    <string name="register_button">🍔 Registrarme</string>
+    <string name="register_go_login">🍕 Ya tengo cuenta</string>
+
+    <string name="new_recipe_title">🍳 Nueva Receta</string>
+    <string name="new_recipe_hint_title">🍽️ Título de la receta</string>
+    <string name="new_recipe_hint_description">📝 Descripción</string>
+    <string name="new_recipe_multimedia">📸 Archivos Multimedia</string>
+    <string name="new_recipe_visibility">🔐 Visibilidad</string>
+    <string name="new_recipe_save">💾 Guardar Receta</string>
+
+
+</resources>

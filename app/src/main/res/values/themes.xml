@@ -1,0 +1,81 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema Base de la Aplicación -->
+    <style name="Base.Theme.Recetario" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
+
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
+
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorOnBackground">@color/md_theme_onBackground</item>
+
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+
+        <item name="colorOutline">@color/md_theme_outline</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <!-- Estilo para BottomNavigationView -->
+        <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+    </style>
+
+    <style name="Theme.Recetario" parent="Base.Theme.Recetario" />
+
+    <!-- NUEVO TEMA MODERNO PARA USUARIOS LOGUEADOS -->
+    <style name="Theme.Recetario.LoggedIn" parent="Base.Theme.Recetario">
+        <item name="colorPrimary">@color/modern_primary</item>
+        <item name="colorOnPrimary">@color/modern_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/modern_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/modern_onPrimaryContainer</item>
+
+        <item name="colorSecondary">@color/modern_secondary</item> <!-- CORREGIDO -->
+        <item name="colorOnSecondary">@color/modern_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/modern_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/modern_onSecondaryContainer</item>
+
+        <item name="colorSurface">@color/modern_surface</item>
+        <item name="colorOnSurface">@color/modern_onSurface</item>
+        <item name="colorSurfaceVariant">@color/modern_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/modern_onSurfaceVariant</item>
+
+        <item name="android:colorBackground">@color/modern_background</item>
+        <item name="colorOnBackground">@color/modern_onBackground</item>
+
+        <!-- Ajustar el color de la barra de estado para que coincida con el nuevo color primario -->
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <!-- Para un color primario azul oscuro, los iconos de la barra de estado deben ser claros (false) -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Estilo Unificado para BottomNavigationView -->
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="itemIconTint">@color/bottom_nav_item_color</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNavigationView.ActiveIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <!-- Estilo para el Indicador Activo (el fondo del ítem seleccionado) -->
+    <style name="Widget.App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorSecondaryContainer</item>
+    </style>
+
+    <!-- Estilo para Botones de Texto -->
+    <style name="Widget.App.Button.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+</resources>

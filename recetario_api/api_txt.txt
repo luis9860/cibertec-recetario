@@ -1,0 +1,50 @@
+http://localhost/recetario_api/auth_register.php
+POST
+Content-Type: application/json
+{
+  "email": "test@correo.com",
+  "password": "12345678"
+}
+
+http://localhost/recetario_api/auth_login.php
+POST
+Content-Type: application/json
+{
+  "email": "test@correo.com",
+  "password": "12345678"
+}
+return token
+
+http://localhost/recetario_api/recipes_create.php
+POST
+use token (Authorization: Bearer TOKEN_GENERADO)
+Content-Type: application/json
+{
+  "title": "Lomo Saltado",
+  "description": "Receta tradicional peruana",
+  "visibility": "public"
+}
+
+http://localhost/recetario_api/recipes_list.php
+GET
+use token (Authorization: Bearer TOKEN_GENERADO)
+
+http://localhost/recetario_api/auth_logout.php
+POST
+use token (Authorization: Bearer TOKEN_GENERADO)
+
+http://localhost/recetario_api/auth_helpers.php
+(archivo interno)
+
+http://localhost/recetario_api/db.php
+(archivo interno)
+
+http://localhost/recetario_api/headers_debug.php
+(GET - debug headers)
+
+http://localhost/recetario_api/index.php
+(GET - información general)
+
+http://localhost/recetario_api/ping.php
+(GET - prueba rápida del servicio)
+
